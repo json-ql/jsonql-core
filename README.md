@@ -1,13 +1,14 @@
 # jsonql-core
 
-This library is a collection of DTO frames that can be used to build data filters with JSON/GraphQL interface. You can think about it as a simple query language, like SQL, but done with JSON and supporting paginated results. Using this lib you can easily build the following example queries:
+This library is a collection of DTO frames that can be used to build data filters with JSON/GraphQL interface. You can think about it as a simple query language, like SQL, but done with JSON and supporting pagination and sorting. Using this lib you can easily build the following example queries:
 
 1. Give me a list of all users.
+1. Give me a list of all users sorted by `name`.
 1. Give me a first page of all users with `pagesize = 10`.
 1. Give me a list of users which status is `ACTIVE`.
 1. Give me a list of users which status is `ACTIVE` or `BANNED`.
 1. Give me a list of users which are admins.
-1. Give me a first page of all users which are admins with `ACTIVE` or `BANNED` status.  
+1. Give me a first page of all users sorted by `name`, which are admins with `ACTIVE` or `BANNED` status.  
 
 ... etc.
 
@@ -143,7 +144,7 @@ Combines multiple filters with and/or conjunction.
 
 ## Query builder abstraction
 
-A query builder is an abstraction used to fetch paginated data from the persistence storage depending on the incoming request comprised of the combination of filters. Before you get the data you need to implement you own frame with custom filters:
+A query builder is an abstraction used to fetch paginated data from the persistence storage depending on the incoming request comprised of the combination of filters. Before you get the data, you need to implement you own frame with custom filters:
 
 ```java
 class UserFilter extends DefaultPageableRequest {
@@ -170,7 +171,7 @@ class UserFilter extends DefaultPageableRequest {
 }
 ```
 
-Because `DefaultPageableRequest` supports pagination and sort out of the box we can now query for list of users using following example request:
+`DefaultPageableRequest` supports pagination and sorting out of the box, therefore we can now query for list of users using following example request:
 
 ```json
 {
@@ -205,14 +206,14 @@ Now, in your controller you can simply get the data in the following way:
 
 ```java
 public Page<User> listUsers(UserFilter req) {
-	new JpaFilterQueryBuilder<User>()
+	new JpaFilterQueryBuilder<User>(...)
 		.add("name", req.getName())
 		.add("admin", req.isAdmin())
 		.list(req);
 }
 ```
 
-## How to implement custom filter
+## How to implement a custom filter
 
 To implement custom filter implement [`QueryFilter`](src/main/java/com/lifeinide/jsonql/core/intr/QueryFilter.java) interface in your custom filtering frame. Each `FilterQueryBuilder` implementation contains following not implemented method:
 
