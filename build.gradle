@@ -43,7 +43,7 @@ publishing {
 }
 
 dependencies {
-    compile group: 'org.slf4j', name: 'slf4j-api', version: property('vSlf4j')
+    implementation group: 'org.slf4j', name: 'slf4j-api', version: property('vSlf4j')
     testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: property('vJunit')
     testRuntimeOnly group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: property('vJunit')
     testRuntimeOnly group: 'ch.qos.logback', name: 'logback-classic', version: property('vLogback')
