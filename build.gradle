@@ -19,6 +19,7 @@ publishing {
     if (!token) {
         try {
             token = new File(System.getProperty("user.home"), ".github-token").text
+            logger.info("Using token from ~/.github-token.")
         } catch (e) {
             logger.warn("Please put personal github token into ~/.github-token file or pass it with -Ptoken=??? parameter.")
         }
@@ -33,7 +34,7 @@ publishing {
     repositories {
         maven {
             name = "GitHubPackages"
-            url = uri("https://maven.pkg.github.com/json-ql")
+            url = uri("https://maven.pkg.github.com/json-ql/jsonql-core")
             credentials {
                 username = project.findProperty("user") ?: "l0co"
                 password = token

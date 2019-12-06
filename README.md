@@ -13,6 +13,35 @@ This library is a collection of DTO frames that can be used to build data filter
 
 Besides frames we also provide data fetchers working with from various sources (JPA, Hibernate, Hibernate Search, ElasticSearch etc). Please browse related repositories [here](https://github.com/json-ql).
 
+## How to use
+
+This lib uses [GitHub packages feature](https://github.com/features/packages), however it's currently a kind of broken feature for open source projects, because it [requires to authenticate](https://github.community/t5/GitHub-API-Development-and/Download-from-Github-Package-Registry-without-authentication/m-p/35501#M3312) even to fetch public packages. Currently to add this library dependency to a project you need to:
+
+1. Generate a [Personal Access Token](https://github.com/settings/tokens) with **read:packages** permission.
+1. Use following dependency (`gradle.build` example):
+
+```groovy
+plugins {
+    id 'java'
+}
+
+repositories {
+	maven { 
+		url = "https://maven.pkg.github.com/json-ql/jsonql-core" 
+		credentials {
+			username = 'nobody'
+			password = 'USE_TOKEN_HERE'
+		}
+	}
+}
+
+dependencies {
+    implementation 'com.lifeinide.jsonql:jsonql-core:VERSION'
+}
+```
+
+Check [here](https://github.com/orgs/json-ql/packages) for available package versions.  
+
 ## Default filters provided
 
 Following default filter frames are provided by this lib.
