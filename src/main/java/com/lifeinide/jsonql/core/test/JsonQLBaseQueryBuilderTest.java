@@ -25,11 +25,11 @@ import java.util.function.Consumer;
  * @author Lukasz Frankowski
  */
 @TestInstance(Lifecycle.PER_CLASS)
-public abstract class BaseQueryBuilderTest<
+public abstract class JsonQLBaseQueryBuilderTest<
 	PC,
 	ID extends Serializable,
-	A extends IBaseEntity<ID>,
-	E extends IEntity<ID, A>,
+	A extends IJsonQLBaseTestEntity<ID>,
+	E extends IJsonQLTestEntity<ID, A>,
 	F extends FilterQueryBuilder<E, Page<E>, ?, F>
 > {
 
@@ -58,7 +58,7 @@ public abstract class BaseQueryBuilderTest<
 	 * Should be executed in {@link BeforeAll} method to populate entities to the db
 	 * @param save The consumer executing entity save
 	 */
-	protected void populateData(Consumer<IBaseEntity> save) {
+	protected void populateData(Consumer<IJsonQLBaseTestEntity> save) {
 		A associatedEntity = buildAssociatedEntity();
 		save.accept(associatedEntity);
 		associatedEntityId = associatedEntity.getId();
@@ -67,12 +67,12 @@ public abstract class BaseQueryBuilderTest<
 		StringGen sg = new StringGen();
 		
 		for (int i = 1; i <=100; i++) {
-			IEntity<ID, A> entity = buildEntity(prevId);
+			IJsonQLTestEntity<ID, A> entity = buildEntity(prevId);
 			entity.setStringVal(sg.nextStr());
 			entity.setLongVal((long) i);
 			entity.setDecimalVal(new BigDecimal(i));
 			entity.setDateVal(LocalDate.of(2018, Month.JANUARY, 1).plusDays(i-1));
-			entity.setEnumVal(EntityEnum.values()[i % EntityEnum.values().length]);
+			entity.setEnumVal(JsonQLTestEntityEnum.values()[i % JsonQLTestEntityEnum.values().length]);
 			if (i%3==0)
 				entity.setEntityVal(associatedEntity);
 			save.accept(entity);
@@ -82,16 +82,16 @@ public abstract class BaseQueryBuilderTest<
 
 	/**
 	 * Whether this persistence storage supports specific test feature.
-	 * @see QueryBuilderTestFeature
+	 * @see JsonQLQueryBuilderTestFeature
 	 */
-	protected boolean supports(QueryBuilderTestFeature feature) {
+	protected boolean supports(JsonQLQueryBuilderTestFeature feature) {
 		return true;
 	}
 
 	@SuppressWarnings("BigDecimalMethodWithoutRoundingCalled")
 	protected BigDecimal decimal(String s) {
 		BigDecimal decimal = new BigDecimal(s);
-		if (supports(QueryBuilderTestFeature.STRICT_INEQUALITIES))
+		if (supports(JsonQLQueryBuilderTestFeature.STRICT_INEQUALITIES))
 			return decimal;
 
 		// remove unncessary zeros
@@ -175,7 +175,7 @@ public abstract class BaseQueryBuilderTest<
 			Assertions.assertEquals(100, res.getCount());
 		});
 
-		if (supports(QueryBuilderTestFeature.STRICT_INEQUALITIES))
+		if (supports(JsonQLQueryBuilderTestFeature.STRICT_INEQUALITIES))
 			doTest((pc, qb) -> {
 				PageableResult<E> res = qb
 					.add("stringVal", SingleValueQueryFilter.of("aa").gt())
@@ -190,7 +190,7 @@ public abstract class BaseQueryBuilderTest<
 			Assertions.assertEquals(27, res.getCount());
 		});
 
-		if (supports(QueryBuilderTestFeature.STRICT_INEQUALITIES))
+		if (supports(JsonQLQueryBuilderTestFeature.STRICT_INEQUALITIES))
 			doTest((pc, qb) -> {
 				PageableResult<E> res = qb
 					.add("stringVal", SingleValueQueryFilter.of("ba").lt())
@@ -198,7 +198,7 @@ public abstract class BaseQueryBuilderTest<
 				Assertions.assertEquals(26, res.getCount());
 			});
 
-		if (supports(QueryBuilderTestFeature.NULLS))
+		if (supports(JsonQLQueryBuilderTestFeature.NULLS))
 			doTest((pc, qb) -> {
 				PageableResult<E> res = qb
 					.add("stringVal", SingleValueQueryFilter.ofNotNull())
@@ -206,7 +206,7 @@ public abstract class BaseQueryBuilderTest<
 				Assertions.assertEquals(100, res.getCount());
 			});
 
-		if (supports(QueryBuilderTestFeature.NULLS))
+		if (supports(JsonQLQueryBuilderTestFeature.NULLS))
 			doTest((pc, qb) -> {
 				PageableResult<E> res = qb
 					.add("stringVal", SingleValueQueryFilter.ofNull())
@@ -233,29 +233,29 @@ public abstract class BaseQueryBuilderTest<
 	public void testEnumFilter() {
 		doTest((pc, qb) -> {
 			PageableResult<E> res = qb
-				.add("enumVal", SingleValueQueryFilter.of(EntityEnum.A))
+				.add("enumVal", SingleValueQueryFilter.of(JsonQLTestEntityEnum.A))
 				.list(BasePageableRequest.ofUnpaged());
 			Assertions.assertEquals(33, res.getCount());
 			for (E e: res)
-				Assertions.assertEquals(EntityEnum.A, e.getEnumVal());
+				Assertions.assertEquals(JsonQLTestEntityEnum.A, e.getEnumVal());
 		});
 
 		doTest((pc, qb) -> {
 			PageableResult<E> res = qb
-				.add("enumVal", SingleValueQueryFilter.of(EntityEnum.A).ne())
+				.add("enumVal", SingleValueQueryFilter.of(JsonQLTestEntityEnum.A).ne())
 				.list(BasePageableRequest.ofUnpaged());
 			Assertions.assertEquals(67, res.getCount());
 			for (E e: res)
-				Assertions.assertNotEquals(EntityEnum.A, e.getEnumVal());
+				Assertions.assertNotEquals(JsonQLTestEntityEnum.A, e.getEnumVal());
 		});
 
 		doTest((pc, qb) -> {
 			PageableResult<E> res = qb
-				.add("enumVal", ListQueryFilter.of(SingleValueQueryFilter.of(EntityEnum.A), SingleValueQueryFilter.of(EntityEnum.B)))
+				.add("enumVal", ListQueryFilter.of(SingleValueQueryFilter.of(JsonQLTestEntityEnum.A), SingleValueQueryFilter.of(JsonQLTestEntityEnum.B)))
 				.list(BasePageableRequest.ofUnpaged());
 			Assertions.assertEquals(67, res.getCount());
 			for (E e: res)
-				Assertions.assertNotEquals(EntityEnum.C, e.getEnumVal());
+				Assertions.assertNotEquals(JsonQLTestEntityEnum.C, e.getEnumVal());
 		});
 	}
 
@@ -276,7 +276,7 @@ public abstract class BaseQueryBuilderTest<
 			Assertions.assertEquals(100, res.getCount());
 		});
 
-		if (supports(QueryBuilderTestFeature.STRICT_INEQUALITIES))
+		if (supports(JsonQLQueryBuilderTestFeature.STRICT_INEQUALITIES))
 			doTest((pc, qb) -> {
 				PageableResult<E> res = qb
 					.add("longVal", SingleValueQueryFilter.of(1L).gt())
@@ -323,7 +323,7 @@ public abstract class BaseQueryBuilderTest<
 			Assertions.assertEquals(100, res.getCount());
 		});
 
-		if (supports(QueryBuilderTestFeature.STRICT_INEQUALITIES))
+		if (supports(JsonQLQueryBuilderTestFeature.STRICT_INEQUALITIES))
 			doTest((pc, qb) -> {
 				PageableResult<E> res = qb
 					.add("decimalVal", SingleValueQueryFilter.of(decimal("1.00")).gt())
@@ -368,7 +368,7 @@ public abstract class BaseQueryBuilderTest<
 			PageableResult<E> res = qb
 				.add("dateVal", DateRangeQueryFilter.ofPreviousMonth())
 				.list(BasePageableRequest.ofUnpaged());
-			if (supports(QueryBuilderTestFeature.STRICT_INEQUALITIES)) {
+			if (supports(JsonQLQueryBuilderTestFeature.STRICT_INEQUALITIES)) {
 				Assertions.assertEquals(31, res.getCount());
 				for (E e: res)
 					Assertions.assertEquals(Month.MARCH, e.getDateVal().getMonth());
@@ -387,28 +387,28 @@ public abstract class BaseQueryBuilderTest<
 			PageableResult<E> res = qb
 				.add("dateVal", DateRangeQueryFilter.ofPreviousYear())
 				.list(BasePageableRequest.ofUnpaged());
-			Assertions.assertEquals(supports(QueryBuilderTestFeature.STRICT_INEQUALITIES) ? 0 : 1, res.getCount());
+			Assertions.assertEquals(supports(JsonQLQueryBuilderTestFeature.STRICT_INEQUALITIES) ? 0 : 1, res.getCount());
 		});
 
 		doTest((pc, qb) -> {
 			PageableResult<E> res = qb
 				.add("dateVal", DateRangeQueryFilter.ofLast30Days())
 				.list(BasePageableRequest.ofUnpaged());
-			Assertions.assertEquals(supports(QueryBuilderTestFeature.STRICT_INEQUALITIES) ? 31 : 32, res.getCount());
+			Assertions.assertEquals(supports(JsonQLQueryBuilderTestFeature.STRICT_INEQUALITIES) ? 31 : 32, res.getCount());
 		});
 
 		doTest((pc, qb) -> {
 			PageableResult<E> res = qb
 				.add("dateVal", DateRangeQueryFilter.ofLast90Days())
 				.list(BasePageableRequest.ofUnpaged());
-			Assertions.assertEquals(supports(QueryBuilderTestFeature.STRICT_INEQUALITIES) ? 91 : 92, res.getCount());
+			Assertions.assertEquals(supports(JsonQLQueryBuilderTestFeature.STRICT_INEQUALITIES) ? 91 : 92, res.getCount());
 		});
 
 		doTest((pc, qb) -> {
 			PageableResult<E> res = qb
 				.add("dateVal", DateRangeQueryFilter.of(LocalDate.of(2018, Month.FEBRUARY, 1), LocalDate.of(2018, Month.FEBRUARY, 10)))
 				.list(BasePageableRequest.ofUnpaged());
-			Assertions.assertEquals(supports(QueryBuilderTestFeature.STRICT_INEQUALITIES) ? 10 : 11, res.getCount());
+			Assertions.assertEquals(supports(JsonQLQueryBuilderTestFeature.STRICT_INEQUALITIES) ? 10 : 11, res.getCount());
 		});
 	}
 
@@ -425,7 +425,7 @@ public abstract class BaseQueryBuilderTest<
 		});
 
 		// or condition
-		if (supports(QueryBuilderTestFeature.STRICT_INEQUALITIES))
+		if (supports(JsonQLQueryBuilderTestFeature.STRICT_INEQUALITIES))
 			doTest((pc, qb) -> {
 				PageableResult<E> res = qb
 					.add("longVal", ListQueryFilter.of(SingleValueQueryFilter.of(10L).lt(), SingleValueQueryFilter.of(20L).gt()))
@@ -443,7 +443,7 @@ public abstract class BaseQueryBuilderTest<
 			PageableResult<E> res = qb
 				.add("stringVal", SingleValueQueryFilter.of("ba").ge())
 				.add("longVal", ListQueryFilter.of(SingleValueQueryFilter.of(36L).le(), SingleValueQueryFilter.of(50L).ge()))
-				.add("enumVal", SingleValueQueryFilter.of(EntityEnum.A))
+				.add("enumVal", SingleValueQueryFilter.of(JsonQLTestEntityEnum.A))
 				.add("dateVal", DateRangeQueryFilter.ofTo(TODAY))
 				.list(BasePageableRequest.ofUnpaged().withSort(Sort.ofDesc("longVal")));
 			Assertions.assertEquals(18, res.getCount());
@@ -451,10 +451,10 @@ public abstract class BaseQueryBuilderTest<
 			for (E e: res) {
 				Assertions.assertTrue(e.getStringVal().compareTo("ba") >= 0);
 				Assertions.assertTrue(e.getLongVal() <= 36L || e.getLongVal() >= 50L);
-				Assertions.assertEquals(EntityEnum.A, e.getEnumVal());
+				Assertions.assertEquals(JsonQLTestEntityEnum.A, e.getEnumVal());
 				Assertions.assertTrue(e.getDateVal().isBefore(TODAY));
 
-				if (supports(QueryBuilderTestFeature.SORTING)) {
+				if (supports(JsonQLQueryBuilderTestFeature.SORTING)) {
 					// test sorting
 					if (prev != null)
 						Assertions.assertTrue(prev.getLongVal() > e.getLongVal());
@@ -475,7 +475,7 @@ public abstract class BaseQueryBuilderTest<
 				Assertions.assertEquals(associatedEntityId, e.getEntityVal().getId());
 		});
 
-		if (supports(QueryBuilderTestFeature.NULLS))
+		if (supports(JsonQLQueryBuilderTestFeature.NULLS))
 			doTest((pc, qb) -> {
 				PageableResult<E> res = qb
 					.add("entityVal", EntityQueryFilter.ofNotNull())
@@ -485,7 +485,7 @@ public abstract class BaseQueryBuilderTest<
 					Assertions.assertEquals(associatedEntityId, e.getEntityVal().getId());
 			});
 
-		if (supports(QueryBuilderTestFeature.NULLS))
+		if (supports(JsonQLQueryBuilderTestFeature.NULLS))
 			doTest((pc, qb) -> {
 				PageableResult<E> res = qb
 					.add("entityVal", EntityQueryFilter.ofNull())

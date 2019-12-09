@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 /**
  * @author Lukasz Frankowski
  */
-public enum QueryBuilderTestFeature {
+public enum JsonQLQueryBuilderTestFeature {
 
 	/**
 	 * Whether supports {@code >} and {@code <} inequalites, i.e. {@link QueryCondition#ge} and {@link QueryCondition#le}. For example

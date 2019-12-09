@@ -8,7 +8,7 @@ import java.time.LocalDate;
  * @param <A> Associated entity type.
  * @author Lukasz Frankowski
  */
-public interface IEntity<ID extends Serializable, A extends IBaseEntity> extends IBaseEntity<ID> {
+public interface IJsonQLTestEntity<ID extends Serializable, A extends IJsonQLBaseTestEntity> extends IJsonQLBaseTestEntity<ID> {
 
 	String getStringVal();
 
@@ -26,9 +26,9 @@ public interface IEntity<ID extends Serializable, A extends IBaseEntity> extends
 
 	void setDateVal(LocalDate dateVal);
 
-	EntityEnum getEnumVal();
+	JsonQLTestEntityEnum getEnumVal();
 
-	void setEnumVal(EntityEnum enumVal);
+	void setEnumVal(JsonQLTestEntityEnum enumVal);
 
 	A getEntityVal();
 

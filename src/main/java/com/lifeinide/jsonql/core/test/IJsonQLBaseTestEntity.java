@@ -5,7 +5,7 @@ import java.io.Serializable;
 /**
  * @author Lukasz Frankowski
  */
-public interface IBaseEntity<ID extends Serializable> {
+public interface IJsonQLBaseTestEntity<ID extends Serializable> {
 
 	ID getId();
 

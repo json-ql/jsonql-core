@@ -3,7 +3,7 @@ package com.lifeinide.jsonql.core.test;
 /**
  * @author Lukasz Frankowski
  */
-public class StringGen {
+class StringGen {
 
 	char leftChar = 'a';
 	char rightChar = 'a'-1;
