@@ -14,10 +14,10 @@ import com.lifeinide.jsonql.core.filters.*;
 public interface FilterQueryBuilder<E, P extends PageableResult<E>, Q, SELF extends FilterQueryBuilder<E, P, Q, SELF>> {
 
 	SELF add(String field, DateRangeQueryFilter filter);
-	SELF add(String field, EntityQueryFilter filter);
-	SELF add(String field, ListQueryFilter<?> filter);
-	SELF add(String field, SingleValueQueryFilter filter);
-	SELF add(String field, ValueRangeQueryFilter filter);
+	SELF add(String field, EntityQueryFilter<?> filter);
+	SELF add(String field, ListQueryFilter<? extends QueryFilter> filter);
+	SELF add(String field, SingleValueQueryFilter<?> filter);
+	SELF add(String field, ValueRangeQueryFilter<? extends Number> filter);
 
 	/**
 	 * The bridge for custom filters in concrete database implementations.

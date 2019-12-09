@@ -27,7 +27,7 @@ implements FilterQueryBuilder<E, P, Q, SELF> {
 			filter.getClass().getSimpleName(), getClass().getSimpleName()));
 	}
 
-	protected String createAlias(Class clazz) {
+	protected String createAlias(Class<?> clazz) {
 		return clazz.getSimpleName().replaceAll("[a-z]", "").toLowerCase();
 	}
 
