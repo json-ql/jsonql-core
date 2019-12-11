@@ -70,7 +70,7 @@ public abstract class JsonQLBaseQueryBuilderTest<
 			IJsonQLTestEntity<ID, A> entity = buildEntity(prevId);
 			entity.setStringVal(sg.nextStr());
 			entity.setLongVal((long) i);
-			entity.setDecimalVal(new BigDecimal(i));
+			entity.setDecimalVal(new BigDecimal(i+".99"));
 			entity.setDateVal(LocalDate.of(2018, Month.JANUARY, 1).plusDays(i-1));
 			entity.setEnumVal(JsonQLTestEntityEnum.values()[i % JsonQLTestEntityEnum.values().length]);
 			if (i%3==0)
@@ -310,15 +310,15 @@ public abstract class JsonQLBaseQueryBuilderTest<
 	public void testDecimalFilter() {
 		doTest((pc, qb) -> {
 			PageableResult<E> res = qb
-				.add("decimalVal", SingleValueQueryFilter.of(decimal("1.00")))
+				.add("decimalVal", SingleValueQueryFilter.of(decimal("1.99")))
 				.list(BasePageableRequest.ofUnpaged());
 			Assertions.assertEquals(1, res.getCount());
-			Assertions.assertEquals(new BigDecimal("1.00"), res.iterator().next().getDecimalVal());
+			Assertions.assertEquals(new BigDecimal("1.99"), res.iterator().next().getDecimalVal());
 		});
 
 		doTest((pc, qb) -> {
 			PageableResult<E> res = qb
-				.add("decimalVal", SingleValueQueryFilter.of(decimal("1.00")).ge())
+				.add("decimalVal", SingleValueQueryFilter.of(decimal("1.99")).ge())
 				.list(BasePageableRequest.ofUnpaged());
 			Assertions.assertEquals(100, res.getCount());
 		});
@@ -326,28 +326,28 @@ public abstract class JsonQLBaseQueryBuilderTest<
 		if (supports(JsonQLQueryBuilderTestFeature.STRICT_INEQUALITIES))
 			doTest((pc, qb) -> {
 				PageableResult<E> res = qb
-					.add("decimalVal", SingleValueQueryFilter.of(decimal("1.00")).gt())
+					.add("decimalVal", SingleValueQueryFilter.of(decimal("1.99")).gt())
 					.list(BasePageableRequest.ofUnpaged());
 				Assertions.assertEquals(99, res.getCount());
 			});
 
 		doTest((pc, qb) -> {
 			PageableResult<E> res = qb
-				.add("decimalVal", ValueRangeQueryFilter.ofFrom(decimal("10.00")))
+				.add("decimalVal", ValueRangeQueryFilter.ofFrom(decimal("10.99")))
 				.list(BasePageableRequest.ofUnpaged());
 			Assertions.assertEquals(91, res.getCount());
 		});
 
 		doTest((pc, qb) -> {
 			PageableResult<E> res = qb
-				.add("decimalVal", ValueRangeQueryFilter.ofTo(decimal("10.00")))
+				.add("decimalVal", ValueRangeQueryFilter.ofTo(decimal("10.99")))
 				.list(BasePageableRequest.ofUnpaged());
 			Assertions.assertEquals(10, res.getCount());
 		});
 
 		doTest((pc, qb) -> {
 			PageableResult<E> res = qb
-				.add("decimalVal", ValueRangeQueryFilter.of(decimal("10.00"), decimal("20.00")))
+				.add("decimalVal", ValueRangeQueryFilter.of(decimal("10.99"), decimal("20.99")))
 				.list(BasePageableRequest.ofUnpaged());
 			Assertions.assertEquals(11, res.getCount());
 		});
