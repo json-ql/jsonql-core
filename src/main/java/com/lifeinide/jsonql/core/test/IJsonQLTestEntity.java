@@ -14,6 +14,10 @@ public interface IJsonQLTestEntity<ID extends Serializable, A extends IJsonQLBas
 
 	void setStringVal(String stringVal);
 
+	boolean isBooleanVal();
+
+	void setBooleanVal(boolean booleanVal);
+
 	Long getLongVal();
 
 	void setLongVal(Long longVal);
@@ -33,5 +37,5 @@ public interface IJsonQLTestEntity<ID extends Serializable, A extends IJsonQLBas
 	A getEntityVal();
 
 	void setEntityVal(A entityVal);
-	
+
 }

@@ -69,6 +69,7 @@ public abstract class JsonQLBaseQueryBuilderTest<
 		for (int i = 1; i <=100; i++) {
 			IJsonQLTestEntity<ID, A> entity = buildEntity(prevId);
 			entity.setStringVal(sg.nextStr());
+			entity.setBooleanVal(i%2==0);
 			entity.setLongVal((long) i);
 			entity.setDecimalVal(new BigDecimal(i+".99"));
 			entity.setDateVal(LocalDate.of(2018, Month.JANUARY, 1).plusDays(i-1));
@@ -226,6 +227,27 @@ public abstract class JsonQLBaseQueryBuilderTest<
 				.add("stringVal", ListQueryFilter.of(SingleValueQueryFilter.of("aa"), SingleValueQueryFilter.of("ab")).and())
 				.list(BasePageableRequest.ofUnpaged());
 			Assertions.assertEquals(0, res.getCount());
+		});
+	}
+
+	@Test
+	public void testBooleanFilter() {
+		doTest((pc, qb) -> {
+			PageableResult<E> res = qb
+				.add("booleanVal", SingleValueQueryFilter.of(true))
+				.list(BasePageableRequest.ofUnpaged());
+			Assertions.assertEquals(50, res.getCount());
+			for (E e: res)
+				Assertions.assertTrue(e.isBooleanVal());
+		});
+
+		doTest((pc, qb) -> {
+			PageableResult<E> res = qb
+				.add("booleanVal", SingleValueQueryFilter.of(true).ne())
+				.list(BasePageableRequest.ofUnpaged());
+			Assertions.assertEquals(50, res.getCount());
+			for (E e: res)
+				Assertions.assertFalse(e.isBooleanVal());
 		});
 	}
 
