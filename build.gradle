@@ -66,7 +66,7 @@ publishing {
 }
 
 dependencies {
-    implementation group: 'org.slf4j', name: 'slf4j-api', version: property('vSlf4j')
+    compile group: 'org.slf4j', name: 'slf4j-api', version: property('vSlf4j')
     compileOnly group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: property('vJunit')
 }
 
