@@ -68,7 +68,7 @@ public abstract class JsonQLBaseQueryBuilderTest<
 		
 		for (int i = 1; i <=100; i++) {
 			IJsonQLTestEntity<ID, A> entity = buildEntity(prevId);
-			entity.setStringVal(sg.nextStr());
+			entity.setStringVal(phrase(sg.nextStr()));
 			entity.setBooleanVal(i%2==0);
 			entity.setLongVal((long) i);
 			entity.setDecimalVal(new BigDecimal(i+".99"));
@@ -79,6 +79,10 @@ public abstract class JsonQLBaseQueryBuilderTest<
 			save.accept(entity);
 			prevId = entity.getId();
 		}
+	}
+
+	protected String phrase(String s) {
+		return "phrase-"+s;
 	}
 
 	/**
@@ -156,22 +160,22 @@ public abstract class JsonQLBaseQueryBuilderTest<
 	public void testStringFilter() {
 		doTest((pc, qb) -> {
 			PageableResult<E> res = qb
-				.add("stringVal", SingleValueQueryFilter.of("aa"))
+				.add("stringVal", SingleValueQueryFilter.of(phrase("aa")))
 				.list(BasePageableRequest.ofUnpaged());
 			Assertions.assertEquals(1, res.getCount());
-			Assertions.assertEquals("aa", res.getData().iterator().next().getStringVal());
+			Assertions.assertEquals(phrase("aa"), res.getData().iterator().next().getStringVal());
 		});
 
 		doTest((pc, qb) -> {
 			PageableResult<E> res = qb
-				.add("stringVal", SingleValueQueryFilter.of("aa").ne())
+				.add("stringVal", SingleValueQueryFilter.of(phrase("aa")).ne())
 				.list(BasePageableRequest.ofUnpaged());
 			Assertions.assertEquals(99, res.getCount());
 		});
 
 		doTest((pc, qb) -> {
 			PageableResult<E> res = qb
-				.add("stringVal", SingleValueQueryFilter.of("aa").ge())
+				.add("stringVal", SingleValueQueryFilter.of(phrase("aa")).ge())
 				.list(BasePageableRequest.ofUnpaged());
 			Assertions.assertEquals(100, res.getCount());
 		});
@@ -179,14 +183,14 @@ public abstract class JsonQLBaseQueryBuilderTest<
 		if (supports(JsonQLQueryBuilderTestFeature.STRICT_INEQUALITIES))
 			doTest((pc, qb) -> {
 				PageableResult<E> res = qb
-					.add("stringVal", SingleValueQueryFilter.of("aa").gt())
+					.add("stringVal", SingleValueQueryFilter.of(phrase("aa")).gt())
 					.list(BasePageableRequest.ofUnpaged());
 				Assertions.assertEquals(99, res.getCount());
 			});
 
 		doTest((pc, qb) -> {
 			PageableResult<E> res = qb
-				.add("stringVal", SingleValueQueryFilter.of("ba").le())
+				.add("stringVal", SingleValueQueryFilter.of(phrase("ba")).le())
 				.list(BasePageableRequest.ofUnpaged());
 			Assertions.assertEquals(27, res.getCount());
 		});
@@ -194,7 +198,7 @@ public abstract class JsonQLBaseQueryBuilderTest<
 		if (supports(JsonQLQueryBuilderTestFeature.STRICT_INEQUALITIES))
 			doTest((pc, qb) -> {
 				PageableResult<E> res = qb
-					.add("stringVal", SingleValueQueryFilter.of("ba").lt())
+					.add("stringVal", SingleValueQueryFilter.of(phrase("ba")).lt())
 					.list(BasePageableRequest.ofUnpaged());
 				Assertions.assertEquals(26, res.getCount());
 			});
@@ -217,14 +221,14 @@ public abstract class JsonQLBaseQueryBuilderTest<
 
 		doTest((pc, qb) -> {
 			PageableResult<E> res = qb
-				.add("stringVal", ListQueryFilter.of(SingleValueQueryFilter.of("aa"), SingleValueQueryFilter.of("ab")))
+				.add("stringVal", ListQueryFilter.of(SingleValueQueryFilter.of(phrase("aa")), SingleValueQueryFilter.of(phrase("ab"))))
 				.list(BasePageableRequest.ofUnpaged());
 			Assertions.assertEquals(2, res.getCount());
 		});
 
 		doTest((pc, qb) -> {
 			PageableResult<E> res = qb
-				.add("stringVal", ListQueryFilter.of(SingleValueQueryFilter.of("aa"), SingleValueQueryFilter.of("ab")).and())
+				.add("stringVal", ListQueryFilter.of(SingleValueQueryFilter.of(phrase("aa")), SingleValueQueryFilter.of(phrase("ab"))).and())
 				.list(BasePageableRequest.ofUnpaged());
 			Assertions.assertEquals(0, res.getCount());
 		});
@@ -463,7 +467,7 @@ public abstract class JsonQLBaseQueryBuilderTest<
 	public void testMultipleFilters() {
 		doTest((pc, qb) -> {
 			PageableResult<E> res = qb
-				.add("stringVal", SingleValueQueryFilter.of("ba").ge())
+				.add("stringVal", SingleValueQueryFilter.of(phrase("ba")).ge())
 				.add("longVal", ListQueryFilter.of(SingleValueQueryFilter.of(36L).le(), SingleValueQueryFilter.of(50L).ge()))
 				.add("enumVal", SingleValueQueryFilter.of(JsonQLTestEntityEnum.A))
 				.add("dateVal", DateRangeQueryFilter.ofTo(TODAY))
