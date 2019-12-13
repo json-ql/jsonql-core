@@ -12,7 +12,7 @@ This library is a collection of DTO frames that can be used to build data filter
 
 ... etc.
 
-Besides frames we also provide data fetchers working with from various sources (JPA, Hibernate, Hibernate Search, ElasticSearch etc). Please browse related repositories [here](https://github.com/json-ql).
+Besides frames we also provide data fetchers working with various sources (JPA, Hibernate, Hibernate Search, ElasticSearch etc). Please browse related repositories [here](https://github.com/json-ql).
 
 ## How to use
 
