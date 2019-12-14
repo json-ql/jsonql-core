@@ -491,7 +491,7 @@ public abstract class JsonQLBaseQueryBuilderTest<
 	}
 
 	@Test
-	public void testEntityFilters() {
+	public void testEntityFilter() {
 		doTest((pc, qb) -> {
 			PageableResult<E> res = qb
 				.add("entityVal", EntityQueryFilter.of(associatedEntityId))
