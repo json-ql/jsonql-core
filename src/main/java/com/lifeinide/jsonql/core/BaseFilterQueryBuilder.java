@@ -4,6 +4,7 @@ import com.lifeinide.jsonql.core.dto.Page;
 import com.lifeinide.jsonql.core.intr.FilterQueryBuilder;
 import com.lifeinide.jsonql.core.intr.QueryFilter;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 /**
@@ -15,14 +16,15 @@ public abstract class BaseFilterQueryBuilder<E, P extends Page<E>, Q, C extends 
 	SELF extends BaseFilterQueryBuilder<E, P, Q, C, SELF>>
 implements FilterQueryBuilder<E, P, Q, SELF> {
 
-	public abstract C context();
+	@Nonnull public abstract C context();
 
-	protected <T> Page<T> buildPageableResult(Integer pageSize, Integer page, long count, List<T> data) {
+	@Nonnull protected <T> Page<T> buildPageableResult(Integer pageSize, Integer page, long count, List<T> data) {
 		return new Page<>(pageSize, page, count, data);
 	}
 
+	@Nonnull
 	@Override
-	public SELF add(String field, QueryFilter filter) {
+	public SELF add(@Nonnull String field, QueryFilter filter) {
 		throw new IllegalStateException(String.format("Support for filter: %s in builder: %s is not implemented",
 			filter.getClass().getSimpleName(), getClass().getSimpleName()));
 	}

@@ -2,6 +2,9 @@ package com.lifeinide.jsonql.core.intr;
 
 import com.lifeinide.jsonql.core.filters.*;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 /**
  * Visits all possible {@link QueryFilter -s} to build the query.
  *
@@ -13,51 +16,51 @@ import com.lifeinide.jsonql.core.filters.*;
  */
 public interface FilterQueryBuilder<E, P extends PageableResult<E>, Q, SELF extends FilterQueryBuilder<E, P, Q, SELF>> {
 
-	SELF add(String field, DateRangeQueryFilter filter);
-	SELF add(String field, EntityQueryFilter<?> filter);
-	SELF add(String field, ListQueryFilter<? extends QueryFilter> filter);
-	SELF add(String field, SingleValueQueryFilter<?> filter);
-	SELF add(String field, ValueRangeQueryFilter<? extends Number> filter);
+	@Nonnull SELF add(@Nonnull String field, @Nullable DateRangeQueryFilter filter);
+	@Nonnull SELF add(@Nonnull String field, @Nullable EntityQueryFilter<?> filter);
+	@Nonnull SELF add(@Nonnull String field, @Nullable ListQueryFilter<? extends QueryFilter> filter);
+	@Nonnull SELF add(@Nonnull String field, @Nullable SingleValueQueryFilter<?> filter);
+	@Nonnull SELF add(@Nonnull String field, @Nullable ValueRangeQueryFilter<? extends Number> filter);
 
 	/**
 	 * The bridge for custom filters in concrete database implementations.
 	 */
-	SELF add(String field, QueryFilter filter);
+	@Nonnull SELF add(@Nonnull String field, @Nullable QueryFilter filter);
 
 	/**
 	 * Allows to construct "or" clauses. Eg: {@code filter.or(() -> filter.add(CONDITION_1).add(CONDITION_2))}.
 	 */
-	default SELF or(Runnable r) {
+	@Nonnull default SELF or(@Nonnull Runnable r) {
 		throw new IllegalStateException("Not implemented");
 	}
 
 	/**
 	 * Allows to construct "and" clauses. Eg: {@code filter.and(() -> filter.add(CONDITION_1).add(CONDITION_2))}.
 	 */
-	default SELF and(Runnable r) {
+	@Nonnull default SELF and(@Nonnull Runnable r) {
 		throw new IllegalStateException("Not implemented");
 	}
 
 	/**
 	 * Builds the final query from criterias
 	 */
-	Q build(Pageable pageable, Sortable<?> sortable);
+	@Nonnull Q build(@Nonnull Pageable pageable, @Nonnull Sortable<?> sortable);
 
-	P list(Pageable pageable, Sortable<?> sortable);
+	@Nonnull P list(@Nullable Pageable pageable, @Nullable Sortable<?> sortable);
 
-	default P list() {
+	@Nonnull default P list() {
 		return list(null, null);
 	}
-	
-	default P list(Pageable pageable) {
+
+	@Nonnull default P list(@Nullable Pageable pageable) {
 		return list(pageable, null);
 	}
 
-	default P list(Sortable<?> sortable) {
+	@Nonnull default P list(@Nullable Sortable<?> sortable) {
 		return list(null, sortable);
 	}
 
-	default P list(PageableSortable<?> ps) {
+	@Nonnull default P list(@Nullable PageableSortable<?> ps) {
 		return list(ps, ps);
 	}
 
