@@ -371,11 +371,13 @@ public abstract class JsonQLBaseQueryBuilderTest<
 			Assertions.assertEquals(10, res.getCount());
 		});
 
+		// this is important test for BigDecimal because it checks if (10.99, 11.99 ... 19.99) are not included between 1.99 and 2.99 for
+		// full text indexes and other storages treating BigDecimal-s as String-s
 		doTest((pc, qb) -> {
 			PageableResult<E> res = qb
-				.add("decimalVal", ValueRangeQueryFilter.of(decimal("10.99"), decimal("20.99")))
+				.add("decimalVal", ValueRangeQueryFilter.of(decimal("1.99"), decimal("2.99")))
 				.list(BasePageableRequest.ofUnpaged());
-			Assertions.assertEquals(11, res.getCount());
+			Assertions.assertEquals(2, res.getCount());
 		});
 	}
 
