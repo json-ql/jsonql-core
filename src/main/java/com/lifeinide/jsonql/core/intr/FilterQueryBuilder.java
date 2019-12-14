@@ -41,7 +41,7 @@ public interface FilterQueryBuilder<E, P extends PageableResult<E>, Q, SELF exte
 	/**
 	 * Builds the final query from criterias
 	 */
-	Q build();
+	Q build(Pageable pageable, Sortable<?> sortable);
 
 	P list(Pageable pageable, Sortable<?> sortable);
 

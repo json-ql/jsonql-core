@@ -4,6 +4,7 @@ import com.lifeinide.jsonql.core.enums.SortDirection;
 import com.lifeinide.jsonql.core.intr.SortField;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * @author Lukasz Frankowski
@@ -44,6 +45,20 @@ public class Sort implements Serializable, SortField {
 	public Sort desc() {
 		setDirection(SortDirection.DESC);
 		return this;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof Sort)) return false;
+		Sort sort = (Sort) o;
+		return Objects.equals(getSortField(), sort.getSortField()) &&
+			getSortDirection() == sort.getSortDirection();
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(getSortField(), getSortDirection());
 	}
 
 	public static Sort of(String sortField) {

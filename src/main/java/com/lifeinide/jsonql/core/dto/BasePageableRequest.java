@@ -4,8 +4,8 @@ import com.lifeinide.jsonql.core.intr.PageableSortable;
 import com.lifeinide.jsonql.core.intr.SortField;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 /**
  * Base common request for filtering.
@@ -18,7 +18,7 @@ public class BasePageableRequest<S extends SortField> implements Serializable, P
 
 	protected Integer page = 1;
 
-	protected List<S> sort = new ArrayList<>();
+	protected Set<S> sort = new LinkedHashSet<>();
 
 	@Override
 	public Integer getPageSize() {
@@ -49,11 +49,11 @@ public class BasePageableRequest<S extends SortField> implements Serializable, P
 	}
 
 	@Override
-	public List<S> getSort() {
+	public Set<S> getSort() {
 		return sort;
 	}
 
-	public void setSort(List<S> sort) {
+	public void setSort(Set<S> sort) {
 		this.sort = sort;
 	}
 
