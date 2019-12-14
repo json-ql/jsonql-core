@@ -221,16 +221,16 @@ public abstract class JsonQLBaseQueryBuilderTest<
 
 		doTest((pc, qb) -> {
 			PageableResult<E> res = qb
-				.add("stringVal", ListQueryFilter.of(SingleValueQueryFilter.of(phrase("aa")), SingleValueQueryFilter.of(phrase("ab"))))
+				.add("stringVal", ListQueryFilter.of(SingleValueQueryFilter.of(phrase("aa")), SingleValueQueryFilter.of(phrase("ab"))).and())
 				.list(BasePageableRequest.ofUnpaged());
-			Assertions.assertEquals(2, res.getCount());
+			Assertions.assertEquals(0, res.getCount());
 		});
 
 		doTest((pc, qb) -> {
 			PageableResult<E> res = qb
-				.add("stringVal", ListQueryFilter.of(SingleValueQueryFilter.of(phrase("aa")), SingleValueQueryFilter.of(phrase("ab"))).and())
+				.add("stringVal", ListQueryFilter.of(SingleValueQueryFilter.of(phrase("aa")), SingleValueQueryFilter.of(phrase("ab"))))
 				.list(BasePageableRequest.ofUnpaged());
-			Assertions.assertEquals(0, res.getCount());
+			Assertions.assertEquals(2, res.getCount());
 		});
 	}
 
