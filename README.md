@@ -12,7 +12,16 @@ This library is a collection of DTO frames that can be used to build data filter
 
 ... etc.
 
-Besides frames we also provide data fetchers working with various sources (JPA, Hibernate, Hibernate Search, ElasticSearch etc). Please browse related repositories [here](https://github.com/json-ql).
+Besides uniform filtering frames, we also provide [here](https://github.com/json-ql) data fetchers working with various sources:
+
+- SQL databases:
+  - [JPA](https://github.com/json-ql/jsonql-jpa), which can be based on Hibernate or other JPA-compatible technology.
+- NOSQL databases:
+  - MongoDB (coming soon).
+- Full-text indexes:
+  - [Hibernate Search with Lucene](https://github.com/json-ql/jsonql-hibernate-search) backend.
+  - [Hibernate Search with ElasticSearch](https://github.com/json-ql/jsonql-hibernate-search-elastic) backend. 
+
 
 ## How to use
 
@@ -199,8 +208,6 @@ public class JpaFilterQueryBuilder<E> extends BaseFilterQueryBuilder<...> {
 
 }
 ```
-
-Modules providing already implemented filter query builders are [here](https://github.com/json-ql).
 
 Now, in your controller you can simply get the data in the following way:
 
