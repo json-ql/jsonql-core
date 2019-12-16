@@ -121,6 +121,21 @@ public abstract class JsonQLBaseQueryBuilderTest<
 		DateRange.resetToday();
 	}
 
+	@SuppressWarnings("unchecked")
+	@Test
+	public void nullCheckTest() {
+		doTest((pc, qb) -> {
+			Assertions.assertEquals(100, qb
+				.add("dateVal", (DateRangeQueryFilter) null)
+				.add("entityVal", (EntityQueryFilter) null)
+				.add("enumVal", (SingleValueQueryFilter) null)
+				.add("longVal", (ValueRangeQueryFilter) null)
+				.add("decimalVal", (ListQueryFilter) null)
+				.list(null)
+				.getCount());
+		});
+	}
+
 	@Test
 	public void testUnpaged() {
 		doTest((pc, qb) -> {
