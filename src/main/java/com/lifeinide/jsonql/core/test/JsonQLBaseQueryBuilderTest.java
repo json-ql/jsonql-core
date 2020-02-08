@@ -60,7 +60,7 @@ public abstract class JsonQLBaseQueryBuilderTest<
 	 * Should be executed in {@link BeforeAll} method to populate entities to the db
 	 * @param save The consumer executing entity save
 	 */
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({"unchecked", "ConstantConditions"})
 	protected void populateData(Consumer<IJsonQLBaseTestEntity> save) {
 		Object associatedEntity = buildAssociatedEntity();
 		if (associatedEntity instanceof IJsonQLBaseTestEntity) {
@@ -79,7 +79,7 @@ public abstract class JsonQLBaseQueryBuilderTest<
 			entity.setDecimalVal(new BigDecimal(i+".99"));
 			entity.setDateVal(LocalDate.of(2018, Month.JANUARY, 1).plusDays(i-1));
 			entity.setEnumVal(JsonQLTestEntityEnum.values()[i % JsonQLTestEntityEnum.values().length]);
-			if (associatedEntity instanceof IJsonQLBaseTestEntity && entity instanceof IJsonQLTestParentEntity && i%3==0)
+			if (supports(JsonQLQueryBuilderTestFeature.ASSOCIATED_ENTITY) && i%3==0)
 				((IJsonQLTestParentEntity) entity).setEntityVal((IJsonQLBaseTestEntity) associatedEntity);
 			save.accept(entity);
 			prevId = entity.getId();
@@ -95,6 +95,9 @@ public abstract class JsonQLBaseQueryBuilderTest<
 	 * @see JsonQLQueryBuilderTestFeature
 	 */
 	protected boolean supports(JsonQLQueryBuilderTestFeature feature) {
+		if (JsonQLQueryBuilderTestFeature.ASSOCIATED_ENTITY.equals(feature))
+			return buildEntity(null) instanceof IJsonQLTestParentEntity;
+
 		return true;
 	}
 
@@ -514,8 +517,8 @@ public abstract class JsonQLBaseQueryBuilderTest<
 
 	@Test
 	public void testEntityFilter() {
-		if (!(buildEntity(null) instanceof IJsonQLTestParentEntity))
-			return; // no entity tests if the main entity doesn't support associations
+		if (!supports(JsonQLQueryBuilderTestFeature.ASSOCIATED_ENTITY))
+			return;
 
 		doTest((pc, qb) -> {
 			PageableResult<E> res = qb

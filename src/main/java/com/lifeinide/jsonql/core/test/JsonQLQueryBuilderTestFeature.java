@@ -30,4 +30,9 @@ public enum JsonQLQueryBuilderTestFeature {
 	 */
 	SORTING,
 
+	/**
+	 * Whether the entity model supports associated entity in {@link IJsonQLTestParentEntity#getEntityVal()}.
+	 */
+	ASSOCIATED_ENTITY
+
 }

@@ -5,7 +5,6 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 /**
- * @param <A> Associated entity type.
  * @author Lukasz Frankowski
  */
 public interface IJsonQLTestEntity<ID extends Serializable> extends IJsonQLBaseTestEntity<ID> {
