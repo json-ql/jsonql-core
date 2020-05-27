@@ -17,11 +17,10 @@ Besides uniform filtering frames, we also provide [here](https://github.com/json
 - SQL databases:
   - [JPA](https://github.com/json-ql/jsonql-jpa), which can be based on Hibernate or other JPA-compatible technology.
 - NOSQL databases:
-  - MongoDB (coming soon).
+  - [MongoDB](https://github.com/json-ql/jsonql-mongo).
 - Full-text indexes:
   - [Hibernate Search with Lucene](https://github.com/json-ql/jsonql-hibernate-search) backend.
   - [Hibernate Search with ElasticSearch](https://github.com/json-ql/jsonql-hibernate-search-elastic) backend. 
-
 
 ## How to use
 
