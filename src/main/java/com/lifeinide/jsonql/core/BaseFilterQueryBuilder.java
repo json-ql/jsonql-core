@@ -5,6 +5,7 @@ import com.lifeinide.jsonql.core.intr.FilterQueryBuilder;
 import com.lifeinide.jsonql.core.intr.QueryFilter;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.List;
 
 /**
@@ -12,9 +13,15 @@ import java.util.List;
  *
  * @author Lukasz Frankowski
  */
+@SuppressWarnings("unchecked")
 public abstract class BaseFilterQueryBuilder<E, P extends Page<E>, Q, C extends BaseQueryBuilderContext,
 	SELF extends BaseFilterQueryBuilder<E, P, Q, C, SELF>>
 implements FilterQueryBuilder<E, P, Q, SELF> {
+
+	/**
+	 * Limits returned items count in case of no pagination is requested. Null means infinity.
+	 */
+	protected Integer maxResults = 100;
 
 	@Nonnull public abstract C context();
 
@@ -31,6 +38,21 @@ implements FilterQueryBuilder<E, P, Q, SELF> {
 
 	protected String createAlias(Class<?> clazz) {
 		return clazz.getSimpleName().replaceAll("[a-z]", "").toLowerCase();
+	}
+
+	@Nullable public Integer getMaxResults() {
+		return maxResults;
+	}
+
+	public SELF withMaxResults(int maxResults) {
+		this.maxResults = maxResults;
+		return (SELF) this;
+	}
+
+	public SELF withUnlimitedResults() {
+		this.maxResults = null;
+		return (SELF) this;
+
 	}
 
 }
