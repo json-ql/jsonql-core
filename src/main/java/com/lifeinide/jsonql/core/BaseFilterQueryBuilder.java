@@ -2,6 +2,7 @@ package com.lifeinide.jsonql.core;
 
 import com.lifeinide.jsonql.core.dto.Page;
 import com.lifeinide.jsonql.core.intr.FilterQueryBuilder;
+import com.lifeinide.jsonql.core.intr.Pageable;
 import com.lifeinide.jsonql.core.intr.QueryFilter;
 
 import javax.annotation.Nonnull;
@@ -33,7 +34,7 @@ implements FilterQueryBuilder<E, P, Q, SELF> {
 	@Override
 	public SELF add(@Nonnull String field, QueryFilter filter) {
 		throw new IllegalStateException(String.format("Support for filter: %s in builder: %s is not implemented",
-			filter.getClass().getSimpleName(), getClass().getSimpleName()));
+			filter!=null ? filter.getClass().getSimpleName() : "null", getClass().getSimpleName()));
 	}
 
 	protected String createAlias(Class<?> clazz) {
@@ -52,7 +53,12 @@ implements FilterQueryBuilder<E, P, Q, SELF> {
 	public SELF withUnlimitedResults() {
 		this.maxResults = null;
 		return (SELF) this;
+	}
 
+	@Nullable protected Integer getPageSize(@Nullable Pageable pageable) {
+		if (pageable==null || !pageable.isPaged())
+			return maxResults;
+		return Integer.min(pageable.getPageSize(), maxResults!=null ? maxResults : Integer.MAX_VALUE);
 	}
 
 }
