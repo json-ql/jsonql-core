@@ -71,4 +71,8 @@ dependencies {
     compileOnly group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: property('vJunit')
 }
 
+test {
+    useJUnitPlatform()
+}
+
 def installer = install.repositories.mavenInstaller
