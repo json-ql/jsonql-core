@@ -58,7 +58,9 @@ public class BasePageableRequest<S extends SortField> implements Serializable, P
 	}
 
 	public BasePageableRequest withSort(S sort) {
-		getSort().add(sort);
+		if (sort != null) {
+			getSort().add(sort);
+		}
 		return this;
 	}
 
